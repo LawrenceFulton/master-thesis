@@ -1,0 +1,211 @@
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  ╭─────────╮                      ╔══╦╗ ╗ ╔═╦═╗ ╥ ┌─┐┌─┐┌─┐┬ ┬┌─┐┌┐ ┬
+%  │ ,-= ---┑│                  |   ╠═╦╝╚╗╠╗║ ║ ╠═╣ ├─┤├─┤│  ├─┤├─ │└┐│
+%  │ % iTec   │                  |   ╨ ╚═ ╚╝╚╝ ╨ ╨ ╨ ┴ ┴┴ ┴└─┘┴ ┴└─┘┴ └┘
+%  │┃°. .°.  │ Chair Individual |          ┬ ┬┌┐ ┬┬┬  ┬┌─┐┬─┐┌─┐┬┌┬┐┬ ┬
+%  │┖  °   ° │   and Technology |          │ ││└┐││└┐┌┘├─ ├┬┘└─┐│ │ └┬┘
+%  ╰─────────╯                             └─┘┴ └┘┴ └┘ └─┘┴└─└─┘┴ ┴  ┴
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  This file is part of the Master's thesis LaTeX template used at the
+%  Chair Individual and Technology (iTec) at RWTH Aachen University.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt, a4paper, titlepage]{book}
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  load PACKAGES & SETTINGS from file
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{itec-preamble}
+\usepackage{algorithm}
+\usepackage{algpseudocode} 
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{makecell} 
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  HYPERSETUP (document meta info)
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hypersetup{
+  pdftitle     = {Your Thesis Title},
+  pdfsubject   = {Somebody's Master Thesis},
+  pdfauthor    = {Lawrence Benjamin Fulton, RWTH Aachen University},
+  pdfkeywords  = {Some, Descriptive, Keywords},
+  pdfstartpage = {1},                 % startseite
+  %pdfpagemode = {FullScreen},        % PageWdth, FullScreen, None ...
+  %pdfnewwindow= true,                %
+  %pdfborder   = {0 0 0},             %
+  %bookmarksopen=true,                %
+  %bookmarksnumbered=true,            %
+  %linktocpage  = true,                % only clickable page numbers in toc toc
+  colorlinks   = false,                % Farbige links
+  %linktocpage,                       % colored pagenumber_in_toc
+  anchorcolor  = black,               % anchor-text (header)
+  citecolor    = black,            % biblio link
+  %filecolor   = rltblue,             % local file (PDF)
+  linkcolor    = black,               % content,index,ref/pageref-label
+  %menucolor   = blue,                % Acrobat menu item
+  %urlcolor    = webblue,             % URLs - http-Adressedate (auch TeX)
+  pdfcreator   = {pdflatex},
+  pdfproducer  = {latex-pdftex}
+}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Document specific settings and such
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Hyphenation patterns
+\hyphenation{
+thiswordwillstayinoneline
+thistoo
+you-should-hyphenate-here
+}
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength {\marginparwidth }{2cm}
+
+\newcommand{\researchquestion}[1]{\begin{quote}\sloppy \emph{#1} \end{quote}} 
+
+
+\begin{document}
+
+
+
+% allow more flexible whitespaces to avoid hyphenation and overfull hboxes
+\sloppy
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter
+
+%\loadgeometry{myText}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  TITLEPAGE
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\listoftodos
+
+
+
+%\include{sections/titlepage}
+
+\thispagestyle{empty}
+\emptydoublepage
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  DECLARATION OF OWN WORK
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\include{declarationofownwork}
+%\emptydoublepage
+
+\setcounter{page}{5}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Table of Content
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+\emptydoublepage
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  List of Figures
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\listoffigures
+\emptydoublepage
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  List of Tables
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\listoftables
+\emptydoublepage
+
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Abstract
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  the abstract should breifly describe the work
+%%
+\thispagestyle{empty}
+\include{sections/abstract}
+\emptydoublepage
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Acknowledgements
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  time to say thank you to everybody you feel grateful
+%%
+\thispagestyle{empty}
+\include{acknowledgements}
+\emptydoublepage
+
+%In der Arbeit verwendete Konventionen (Formelsatz, Definitionen, etc.)
+%conventions applied in the thesis (AE/BE, definitions, etc.)
+\include{conventions}
+\emptydoublepage
+
+%--------------------------------------------------------------
+\mainmatter
+
+\include{sections/introduction}
+%\emptydoublepage
+
+\include{sections/background-relatedwork}
+%\emptydoublepage
+
+\include{sections/methods}
+%\emptydoublepage
+
+%\include{results}
+%\emptydoublepage
+
+%\include{discussion}
+%\emptydoublepage
+
+%\include{conclusion}
+%\emptydoublepage
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+ \begin{appendix}
+ \include{sections/appendix/harms}
+% \emptydoublepage
+% \include{appendix_02}
+% \emptydoublepage
+ \end{appendix}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Bibliography
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliography}
+ \bibliographystyle{plainnat}
+%\bibliographystyle{IEEEtranN}
+%\bibliographystyle{apa}
+\bibliography{thesis}
+\emptydoublepage
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Index
+%\markboth{Index}{Index}
+%\thispagestyle{plain}
+%\phantomsection
+%\addcontentsline{toc}{chapter}{\protect\numberline{}Index}
+%\printindex
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%date of typesetting
+\newpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\hspace*{\fill}{\tiny Typeset \today}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

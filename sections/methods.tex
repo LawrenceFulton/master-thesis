@@ -1,0 +1,365 @@
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  ╭─────────╮                      ╔══╦╗ ╗ ╔═╦═╗ ╥ ┌─┐┌─┐┌─┐┬ ┬┌─┐┌┐ ┬
+%  │ ,-= ━━━┑│                  |   ╠═╦╝╚╗╠╗║ ║ ╠═╣ ├─┤├─┤│  ├─┤├─ │└┐│
+%  │ % iTec  │                  |   ╨ ╚═ ╚╝╚╝ ╨ ╨ ╨ ┴ ┴┴ ┴└─┘┴ ┴└─┘┴ └┘
+%  │┃°. .°.  │ Chair Individual |          ┬ ┬┌┐ ┬┬┬  ┬┌─┐┬─┐┌─┐┬┌┬┐┬ ┬
+%  │┖  °   ° │   and Technology |          │ ││└┐││└┐┌┘├─ ├┬┘└─┐│ │ └┬┘
+%  ╰─────────╯                             └─┘┴ └┘┴ └┘ └─┘┴└─└─┘┴ ┴  ┴
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  This file is part of the Master's thesis LaTeX template used at the
+%  Chair Individual and Technology (iTec) at RWTH Aachen University.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Methods}
+\label{chap:methods} 
+
+
+\section{Overview}
+We simulate dyadic political debates between Large Language Model (LLM) agents endowed with socio-demographic and political profiles derived from the German Longitudinal Election Study (GLES) and evaluate (i) initial alignment with official party stances, (ii) opinion shifts during interaction, and (iii) convergence dynamics. A preliminary prompt sensitivity experiment quantifies whether minor prompt formatting changes materially affect quantitative survey-style outputs (7-point Likert judgements of policy statements). All analyses use mixed-effects modelling to account for repeated measurements within debate sessions.
+
+\section{Agent Profiling and Sampling}
+\label{sec:agent_profiling_and_sampling}
+
+wThe personas were generated based on quantitative measurements, which is referred to as Quantitative Persona Creation \cite{Salminen2020quantative}. Taking the approach from \cite{von2024vox} we took the German Longitudinal Election Study (GLES) as the base to create profiles. The section we chose is the GLES Cross-Section 2009-2021 cumulative dataset \citep{ZA6835}. This dataset contains socio-demographic and political attitude data from German federal election years 2009, 2013, 2017, and 2021. This dataset  is then filtered by only taking respondents data which contain data for the variables of interest (see below). Furthermore, we only take the subset of the data which have the encoded field start set to \texttt{27.09.2021}, meaning that this survey was taken after the 2021 federal election and thus respondents can state which party they have voted for. This leads to a total of 3,431 respondents. The GLES records are filtered to retain agents with strong party identification (German: \emph{sehr stark}) for six Bundestag parties: CDU/CSU, SPD, Bündnis 90/Die Grünen, FDP, AfD, Die Linke which were the parties having seats in the 20th Bundestag between 2021 and 2025. The Party SSW is not included due to it only contesting in Schleswig-Holstein and only having a sigle seat in the Bundestag. 
+
+The selected variables from which the personas were generated were taken from \cite{von2024vox} and have been shown to be important predictors of voting behaviour—demographics, party affiliations, and views on politically salient issues, such as immigration. The variables include age, gender, education, employment, household income, whether they live in west or east Germany, religiousness, self-evaluation of weather they see themselves as left or right leaning, party alignment, opinion on inequality, option on immigration and their 2021 federal election vote. The variables were then made into a story by using a template which can be seen in the Appendix \todo{add template into appendix}.
+
+Furthermore we create a default agent which doesn't have a biography. This serves as a baseline 
+
+
+
+\section{Wahl-O-Mat Statements}
+
+To chose the debate topics a subset of questions from the Wahl-O-Mat from the 2021 federal election was chosen. The Wahl-O-Mat is a digital tool designed to support voters in Germany in assessing how political parties align with their views. It’s typically released concerning a specific election. The user is presented with a series of political statements, ranging from social issues to economic policies, and covers a wide range of topics relevant to the political landscape at the time.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{imgs/Wahl-O-Mat-Tempo.png}
+    \caption{A question of the 2021 Federal Election Wahl-O-Mat which translates to "A general speed limit should apply on al motorways"}
+    \label{fig:Wahl-O-Mat}
+\end{figure}
+
+
+
+For each statement, the user can decide whether they agree, are neutral, or disagree (see Figure \ref{fig:Wahl-O-Mat}). In the end, the Wahl-O-Mat compares the user’s responses with the official positions of the political parties participating in the election. The Wahl-O-Mat then ranks the parties, showing which parties’ policies align most closely with the user’s positions. The Wahl-O-Mat was developed by the Federal Agency for Civic Education (FACE) and is considered the most important tool for electoral decision-making in Germany. For the federal election in 2021, it was accessed over 21 million times \citep{bpb2021geschichte}. 
+
+
+From this questionnaire a subset of 5 questions (out of 38 total) that cover a range of topics and elicit diverse responses across parties. The set was chosen so that it reflects key political issues and divides among the parties. The selected statements are:
+
+
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Selected debate topics from the Wahl-O-Mat.}
+    \label{tab:questionnaire}
+    \begin{tabularx}{\textwidth}{@{} XX @{}}
+        \toprule
+        \textbf{Original (German)} & \textbf{English Translation} \\
+        \midrule
+        
+        Auf allen Autobahnen soll ein generelles Tempolimit gelten. &
+        A general speed limit should apply on all motorways. \\
+        \midrule
+        
+        Deutschland soll seine Verteidigungsausgaben erhöhen. &
+        Germany should increase its defence spending. \\
+        \midrule
+        
+        Bei Bundestagswahlen sollen auch Jugendliche ab 16 Jahren wählen dürfen. &
+        Young people aged 16 and over should also be allowed to vote in federal elections. \\
+        \midrule
+        
+        Die Förderung von Windenergie soll beendet werden. &
+        The promotion of wind energy should be ended. \\
+        \midrule
+        
+        Die Möglichkeiten der Vermieterinnen und Vermieter, Wohnungsmieten zu erhöhen, sollen gesetzlich stärker begrenzt werden. &
+        The ability of landlords to increase rents should be more strictly limited by law. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Debate Pairing Design}
+
+For our analysis, we simulated debates based on five questions from the Wahl-O-Mat. The debates featured agents from seven groups (six political parties plus a 'default persona'). We simulated interactions for all 28 unique pairings of these groups, including within-group debates. Having a pair, we then sample an agent from the agents defined in section \ref{sec:agent_profiling_and_sampling} where the voted party of the agent aligns with the party wanted for the pair. 
+
+%Since we are repeating the process 5 times, with new agents, it results to 700 simulated debates $28$ (unique pairings) $\times 5$ (questions) $\times 5$ (repetitions).
+
+
+
+\section{Prompt Construction and Sensitivity 
+Conditions}
+
+For this experiment two different types of prompts are needed. The first one is to generate an answer in the debate for the other agent to later answer, the second one is needed to generate the evaluation of the questionnaire topic from as found in table \ref{tab:questionnaire}. Nevertheless the two types of prompts are similarly structured. Furthermore we are interested in how strong the impact of the chosen prompt is on the results. Since we are unable to apply the prompt sensitivity frameworks POSIX \citep{chatterjee2024posix} and ProSA \citep{zhuo2024prosa} we chose to create three different prompt versions, leading to a total of 6 prompt skeletons (3 prompt versions $\times$ 2 prompt use cases). The differences between the three prompt versions can be found in length, punctuation \cite{sclar2023quantifying} and politeness \cite{yin2024should}. The prompt skeletons can be seen in table \ref{tab:prompt_skeletons}. There are multiple placeholders in the skeleton, the \texttt{\{experiment\_scenario\}} consists out of the question they agents are suppose to discuss about and is structured as follows: \textit{You are discussing the statement: Germany should increase its defence spending.} where the statement is one of the five chosen topics from the Wahl-O-Mat. The \texttt{\{background\_story\}} is the text generated in section \ref{sec:agent_profiling_and_sampling}. In the case of that we are using the `default` agent the part with the background story will be removed from the prompt. In the questionnaire evaluation case we also have a \texttt{\{question\}}, which is structured as following: \textit{On a scale of 1 to 7, how much do you agree with the statement: Germany should increase its defence spending? Answer with only one number.} Finally, the \texttt{\{prior\_turns\}} contains the debate up until that moment and will be discussed in detail in the section \ref{sec:debate_procedure}.
+
+
+
+
+\begin{table}[htbp] 
+    \centering
+    \caption{The $3 \times 2$ experimental design for prompt construction. The table displays the six distinct prompt skeletons, generated from three linguistic versions applied to two different use cases (debate continuation and questionnaire evaluation). The parts of the prompt that were systematically varied are highlighted in bold.}
+    \label{tab:prompt_skeletons}
+    
+    \small 
+    
+
+    \newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+    \begin{tabularx}{\textwidth}{@{} l L L @{}}
+        \toprule
+        \textbf{Prompt Version} & \textbf{Use Case 1: Debate Answer Generation} & \textbf{Use Case 2: Questionnaire Evaluation} \\
+        \midrule
+        
+        % --- Row 1: Version 1 ---
+        \textbf{Version 1} \newline \textit{(Concise/Direct)} & 
+
+        \textbf{[System]} \textbf{Scenario:} \texttt{\{experiment\_scenario\}} \newline \newline
+        \textbf{Background Story:} \texttt{\{background\_story\}} \newline \newline
+        The following is a debate between you and another person. Complete your next reply. Keep the reply shorter than 30 words and in German. \newline \newline
+        \textbf{[User]} \texttt{\{prior\_turns\}} \newline
+        \textbf{[Assistant]} \texttt{\{prior\_turns\}} \newline
+        \dots &
+        
+        \textbf{[System]} \textbf{Scenario:} \texttt{\{experiment\_scenario\}} \newline \newline
+        \textbf{Background Story:} \texttt{\{background\_story\}} \newline \newline
+        The following is a questionnaire. Evaluate the topic based on your background. \newline \newline
+        \textbf{[User]} \texttt{\{prior\_turns\}} \newline
+        \textbf{[Assistant]} \texttt{\{prior\_turns\}} \newline
+        \dots \newline
+        \textbf{[User]} \texttt{\{question\}} \\
+        \midrule
+
+        % --- Row 2: Version 2 ---
+        \textbf{Version 2} \newline \textit{(Descriptive)} &
+        
+        \textbf{[System]} \textbf{The scenario is the following:} \texttt{\{experiment\_scenario\}} \newline 
+        \textbf{This is your background story:} \texttt{\{background\_story\}} \newline 
+        The following is a conversation between you and another person. Complete your next reply. \textbf{Don’t make your answers too long} and answer in German. \newline 
+        \textbf{[User]} \texttt{\{prior\_turns\}}  \newline
+        \textbf{[Assistant]} \texttt{\{prior\_turns\}} \newline
+        \dots &
+        
+        \textbf{[System]} \textbf{The scenario is the following:} \texttt{\{experiment\_scenario\}} \newline 
+        \textbf{This is your background story:} \texttt{\{background\_story\}} \newline 
+        The following is a conversation between you and another person.\newline 
+        \textbf{[User]} \texttt{\{prior\_turns\}} \newline
+        \textbf{[Assistant]} \texttt{\{prior\_turns\}} \newline
+        \dots \newline
+        \textbf{[User]} \texttt{\{question\}} \\
+        \midrule
+
+        % --- Row 3: Version 3 ---
+        \textbf{Version 3} \newline \textit{(Polite/Imaginative)} &
+        
+        \textbf{[System]} \textbf{Please imagine the following scenario:} \texttt{\{experiment\_scenario\}} \newline 
+        \textbf{Here is your background:} \texttt{\{background\_story\}} \newline 
+        \textbf{Kindly respond} in German to the next message from another person. Please keep your reply \textbf{under 30 words}. \newline 
+        \textbf{[User]} \texttt{\{prior\_turns\}} \newline
+        \textbf{[Assistant]} \texttt{\{prior\_turns\}} \newline
+        \dots &
+        
+        
+        \textbf{[System]} \textbf{Please imagine the following scenario:} \texttt{\{experiment\_scenario\}} \newline 
+        \textbf{Here is your background:} \texttt{\{background\_story\}} \newline
+        Kindly respond to the next message from another person. Please reply with only a number. \newline 
+        \textbf{[User]} \texttt{\{prior\_turns\}} \newline
+        \dots \newline
+        \textbf{[User]} \texttt{\{question\}} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Framework}
+
+
+The Python framework to have the debate is a modified version of \cite{neuberger2024sauce}. It has been modified with regards to new API versions, prompt versions and possibility to batch run the script \footnote{available on https://github.com/LawrenceFulton/SAUCE}. The SAUCE framework is a customizable environment for Multi-Agent LLM interactions and allows for agents based on a large variety of underlying models, such as models from Hugging Face or via the OpenAI models through their API. The extensions done to the framework are done to firstly have models run via OpenRouter, and secondly be able to use vLLM for local models which will be explained in detail in section \ref{sec:Models}.
+
+ 
+
+\section{Debate Procedure}
+\label{sec:debate_procedure}
+
+
+Using the simulation framework by \cite{neuberger2024sauce} we let each dyadic debate proceeds for 20 iterations. The initial speaker is selected randomly, and following this alternating responses. The responses are generated using the use case 1 from table \ref{tab:prompt_skeletons}. The output from the LLM would then be added to the next iteration under the \texttt{\{prior\_turns\}}, meaning that we have a growing context. At every 4th turn (t = 0,4,8,12,16,20; where t=0 is the baseline opinion) both agents are queried with the questionnaire evaluation prompt (use case 2 in table \ref{tab:prompt_skeletons}), producing a Likert response (\(1=\) strong disagreement, \(4=\) neutral, \(7=\) strong agreement). These numeric responses are not fed back into subsequent prompts, but rather will be saved for further investigation. The collected data contains then the party the agent is aligning with, the party the debate partner is aligning with, the debate turn, the question, the repetition, of that experiment, the prompt version and the answer the agent gave. The total amount of 21,000 measurements (21 unique party combinations $\times$ 6 debate turns $\times$ 5 questions $\times$ 5 repetitions $\times$ 3 prompt versions).
+
+
+\section{Questionnaire-Evaluation Validation}
+\label{sec:questionnaire_validation}
+
+To determine if the numeric responses from the agents possess face validity, we designed a validation procedure involving human annotators. The core objective is to compare the Likert-scale answers generated by the LLMs with the answers human annotators would expect the LLMs to provide in the same context.
+
+The validation process is as follows:
+First, a subset of debates is sampled from the main dataset. From each of these debates, we select a specific turn where a questionnaire prompt was administered to an agent (e.g., at turn 4, 8, 12, etc.). Next, human annotators are presented with the exact and complete prompt that the LLM agent received at that selected turn. This includes the full prior conversation history (\texttt{\{prior\_turns\}}) and the specific question the agent was asked to evaluate. The crucial task for the annotators is not to state their own personal opinion. Instead, they must carefully read the debate history and, considering the agent's assigned background story, predict the Likert-scale response ($1-7$) that the agent should have given. Finally, the scores predicted by the human annotators are compared with the actual scores generated by the LLM agents. This comparison allows us to evaluate whether the agents' self-reported opinions are plausible and coherent given the context of the debate.
+
+\section{Prompt Sensitivity - RQ1}
+
+To investigate the influence of different prompt phrasings (Version 1, 2, and 3) on the agents' responses, we need to compare their outputs under otherwise identical conditions. Our assumption is that for a given party, on a specific topic, and at a particular turn in the debate, the agent's opinion score should be roughly the same, regardless of which prompt version was used. Minor wording changes in the prompt should ideally not introduce a systematic bias.
+
+To test this, we use a normalisation method to measure how much each prompt version causes responses to deviate from the "expected" answer in any given context. This procedure, detailed in Algorithm \ref{alg:normalised_prompt}, can be broken down as follows:
+
+
+\begin{enumerate}
+    \item  \textbf{Define a "Context":} First, we create a reference group of data points for each specific context. A context is defined by a unique combination of party and debate turn (e.g., all answers from 'SPD' agents at turn $t=4$). This group contains all the answers generated under that context, pooling the results from all three prompt versions.
+
+    \item  \textbf{Establish a Baseline:} For each context group, we calculate an overall mean ($\mu$) and standard deviation ($\sigma$). This establishes a baseline or "expected" distribution of answers for that specific situation. We use a `StandardScaler` for this normalisation.
+
+    \item \textbf{Calculate Prompt-Specific Deviation:} Within that context group, we then look at the answers generated by each prompt version separately. We calculate the mean answer for just Prompt Version 1, the mean for Version 2, and the mean for Version 3.
+
+    \item \textbf{Compute Z-scores:} Finally, we measure how far each prompt's specific mean is from the overall baseline mean. This distance is expressed as a Z-score, which tells us how many standard deviations it is away from the baseline.
+    \begin{itemize}
+        \item A Z-score near 0 means that a prompt version produced answers that were very close to the overall average for that context (i.e., no significant bias).
+        \item A large positive or negative Z-score suggests that a specific prompt's phrasing systematically pushed the agents' answers higher or lower than what would be expected.
+    \end{itemize}
+    By repeating this for every party and time point, we collect a distribution of Z-scores for each of the three prompt versions. We then plot these distributions as histograms to visually assess whether any prompt version consistently introduces a bias across the entire experiment.
+\end{enumerate}
+
+\begin{algorithm}[htb]
+    \caption{Normalised Prompt Comparison} 
+    \label{alg:normalised_prompt}
+    \begin{algorithmic}[1]
+        \Require data matrix $D$ with columns $(\text{time}, \text{party}, \text{prompt}, \text{answer})$
+        \State $\mathcal{S} \gets \emptyset$ \Comment{storage for $(\text{prompt}, z)$ pairs}
+        \ForAll{$t \in \text{unique\_times}(D)$} 
+            \ForAll{$p \in \text{unique\_parties}(D)$} 
+                \State $C \gets \{d \in D \mid d_{\text{time}} = t \wedge d_{\text{party}} = p\}$ \Comment{subset given party $p$ \& time $t$}
+                \State $\text{scaler} \gets \text{StandardScaler.fit}(C_{\text{answer}})$ \Comment{normalise given subset}
+                \ForAll{$v \in \text{unique\_prompts}(C)$} \Comment{iterate prompt variants}
+                    \State $C_v \gets \{c \in C \mid c_{\text{prompt}} = v\}$ \Comment{subset for prompt $v$}
+                    \State $\mu \gets \text{mean}(C_{v,\text{answer}})$ \Comment{mean given $p$, $t$, and $v$}
+                    \State $z \gets \text{scaler.transform}(\mu)$ \Comment{obtain prompt z-score}
+                    \State $\mathcal{S} \gets \mathcal{S} \cup \{(v, z)\}$ \Comment{store for plotting}
+                \EndFor
+            \EndFor
+        \EndFor
+        \State \text{plot\_z\_scores}$(\mathcal{S}, \text{color}=\text{prompt})$ \Comment{single histogram call by prompt colour}
+        \State render()
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Statistical Effect}
+
+To statistically see the impact of the prompt version on the results we create two statistical model, one with and one without the prompt version as parameter, and then apply a likelihood ratio test. The likelihood ratio  test is a goodness of fit test which is used to understand if a parameter should be included in a model or not.  Since we have correlated data (e.g. repeated measurements over time) and the chance of missing data (e.g. the LLM refused to give an numeric answer) we decided to select a Linear Mixed Model \citep{Nan1982Random}. This statistical approach is an extension of general linear models, particularly adept at handling the hierarchical structure of longitudinal data. The "mixed" designation refers to the model's ability to incorporate both fixed and random effects.
+
+Fixed effect represent the experimental factors of main interest, while random effects account for variance from sampling units whose levels are considered a random sample from a wider population \citep{Bolker2009Trends}. In our experimental setup the agents Likert-scale answer was the outcome variable. The fixed effects are time, party, question, and the repetition was set to be a random effect. The whole model can be seen in the following where the notation of $(1|repetition)$ implies this being a random effect.  \todo{Go into continuous and categorical data}
+\begin{align}
+\label{equ:full_model}
+\begin{split}
+    answer & \sim time \times question \\
+    &+ party \times question \\ 
+    &+ prompt\_version \times question \\
+    &+ (1 |repetition)
+\end{split}
+\end{align}
+
+The reduced model removes the $prompt\_version$ from the model leading to 
+\begin{align}
+\begin{split}
+    answer & \sim time \times question \\
+    &+ party \times question \\ 
+    &+ (1 |repetition)
+\end{split}
+\end{align}.
+
+To statistically compare the full and reduced models, a Likelihood Ratio Test (LRT) was conducted. The test statistic is computed as twice the difference in the log-likelihoods of the two models:
+
+\begin{align}
+    LRT = 2 ( \ell_{\text{full}} - \ell_{reduced})
+\end{align}
+
+where $\ell_{\text{full}}$ and $\ell_{\text{reduced}}$ denote the log-likelihoods of the full and reduced models, respectively.
+The degrees of freedom for the test correspond to the difference in the number of estimated parameters between the two models.
+
+The resulting LRT statistic follows a chi-square ($\chi^2$) distribution with these degrees of freedom. The corresponding p-value is obtained from this distribution to assess statistical significance. A low p-value indicates that the full model fits the data significantly better, implying that the inclusion of the prompt version parameter explains additional variance in the responses and thus has a significant effect on the outcome.
+
+\section{Party Alignment Analysis - RQ2}
+
+To compare the initial alignment of the agents with the official stances of the parties from the Wahl-O-Mat, we first transformed the seven-point Likert scale responses into a ternary, ordinal scale: values $\{1,2,3\}$ were mapped to `disagree', $\{4\}$ to `neutral', and $\{5,6,7\}$ to `agree'.
+
+Given that this transformation results in ordinal data, where the categories have a meaningful order but the intervals between them are not uniform, we apply a rank correlation test for this analysis. We therefore selected Spearman's rank correlation coefficient ($\rho$) to quantify the alignment between each agent's transformed stances and the official party positions. Spearman's $\rho$ is ideal for this context because it assesses the strength and direction of a monotonic relationship (i.e., whether one variable tends to increase as the other increases, without assuming the relationship is linear).
+
+The resulting coefficient for each agent was then averaged per party. A value of $\rho=1$ implies a perfect positive correlation with the party's stances, $\rho=0$ implies no correlation, and $\rho=-1$ implies a perfect negative correlation \citep{prion2014making}.
+
+
+\section{Opinion Shift Dynamics (RQ3)}
+To understand the shift in opinions, we focus on two different aspects of the opinion movement. The first is the shift in opinion for individual agents, as detailed in Section \ref{subsec:change}. The second aspect is the aggregate variance of opinions across agents over time, which can be found in Section \ref{subsec:variance}.
+
+\subsection{Change in opinion}
+\label{subsec:change}
+
+The shift of an individual agent's opinion is quantified by the distance from its initial opinion at $t=0$. To analyse this movement, we first remove all data points where $t=0$. The remaining data is then used to fit a mixed-effects model to understand the impact of time and other factors on this opinion distance. For this, we specify a model similar to that in Equation \ref{equ:full_model}, where the outcome variable is now $distance$. In this context, \texttt{prompt\_version} is treated as a \textbf{fixed effect} because we are interested in directly comparing the specific, differential impacts of each prompt version on opinion shift. The model is specified as follows:
+
+\begin{align}
+\begin{split}
+    distance & \sim prompt\_version \times question \\
+    &+ time \\ 
+    &+ (1 |repetition)
+\end{split}
+\end{align}
+
+After fitting the model, we examine the coefficient for $time$ to determine if there is a general trend in opinion distance over time.
+
+\subsection{Variance of opinion}
+\label{subsec:variance}
+
+For the second analysis, we investigate how the collective variance of opinions changes over time. The core idea is that if agents' opinions converge (regardless of the final answer), the overall variance within a group should decrease. To prepare the data, we first group it by \texttt{question}, \texttt{prompt\_version}, and \texttt{timestamp}. For each of these 90 groups ($5$ questions $\times 3$ prompt versions $\times 6$ timestamps), we calculate the standard deviation of agent answers, creating a new aggregated dataset.
+
+In the model for this aggregated data, both \texttt{prompt\_version} and \texttt{question} are specified as \textbf{random effects}. The justification for this is a shift in the research question. Here, we are no longer interested in comparing the effect of one specific prompt version against another. Instead, our goal is to determine if there is a general relationship between $variance$ and $time$ that holds \textit{across} different prompts and questions.
+
+By treating \texttt{prompt\_version} and \texttt{question} as random effects, we are modelling them as random samples from a larger population of possible prompts and questions. This approach allows the model to account for the baseline variability in opinion variance that is inherent to each specific prompt and question. It effectively controls for their idiosyncratic effects, enabling us to isolate and generalise the underlying influence of $time$ on variance. The model is therefore specified as:
+
+\begin{align}
+\begin{split}
+    variance & \sim time \\
+    &+ (1 | prompt\_version) \\ 
+    &+ (1 | question)
+\end{split}
+\end{align}
+
+\section{Models}
+\label{sec:Models}
+
+To have robost results we conduct the research on three distinct large language models. The three models, as seen in table \ref{tab:model_specs} have been chosen for different characteristics. The first model, \texttt{gpt-4.1-mini}, was chosen due to the low API costs, high API speeds and nevertheless decent results on benchmarks \citep{openai2025gpt41}. The second models, \texttt{gpt-oss-120b} was chosen since it a large open source model which will fit on a NVIDIA H100 \citep{agarwal2025gpt}. The third chosen model, \texttt{Mistral-Small-3.1-24B}, was chosen to have a model which is significantly smaller than the other two \citep{MistralAISmall3.1}. Each of the models have a context size well over the needed for this project with the sizes being over a million tokens for \texttt{gpt-4.1-mini} and 127 thousand for \texttt{gpt-oss-120b} and \texttt{Mistral-Small-3.1-24B}.
+
+Open Router was used as the serve to connect to a \texttt{gpt-4.1-mini}  API endpoint. This has the advantage of easily swapping the models with any other model which is offered on OpenRouter and secondly to mitigate the strict rate limits when accessing the API directly via the OpenAI endpoint. 
+The \texttt{gpt-oss-120b} and \texttt{Mistral-Small-3.1-24B} were served locally using vLLM. The integration of vLLM is particularly advantageous as it is a high-throughput serving engine that significantly accelerates LLM inference. This performance gain is primarily achieved through its PagedAttention algorithm, which efficiently manages the memory for attention keys and values, allowing for larger batch sizes and continuous batching. This results in substantially faster generation speeds, making large-scale experiments with local models more feasible \citep{kwon2023Efficient}.
+
+
+\begin{table}[h!]
+\centering
+\caption{Comparison of Language Models and Access Methods}
+\label{tab:model_specs}
+% Set a default alignment for all makecell commands in the table
+\renewcommand{\cellalign}{l} 
+\begin{tabularx}{\textwidth}{X c c c c}
+\toprule
+\textbf{Model} & \textbf{Size in Billion} & \textbf{Developer} & \textbf{Access Method} & \textbf{Cutoff}\\
+\midrule
+\makecell{\texttt{gpt-4.1-mini}} 
+    & Unknown 
+    & OpenAI 
+    & API 
+    & June 2024
+    \\
+\addlinespace
+\makecell{\texttt{gpt-oss-120b}}
+    & 120 
+    & OpenAI 
+    & vLLM
+    & June 2024
+    \\
+\addlinespace
+\makecell{\texttt{Mistral-}\\ \texttt{Small-3.1-24B}}
+    & 24 
+    & Mistral AI 
+    & vLLM
+    & Unknown\\
+    
+\bottomrule
+\end{tabularx}
+\end{table}

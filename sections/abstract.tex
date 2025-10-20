@@ -1,0 +1,15 @@
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  This file is part of the iTec thesis template used at the
+%  Chair Individual and Technology at RWTH Aachen University.
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\loadgeometry{myAbstract}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\chapter*{Abstract\markboth{Abstract}{Abstract}}
+\chapter*{Abstract}
+% we need to add the abstract to the toc manually
+\addcontentsline{toc}{chapter}{\protect\numberline{}Abstract}
+\label{chap:abstract}
+
+Large Language Models (LLMs) are increasingly employed in political simulations, but most existing research has largely focused on two-party systems such as the United States. This paper extends the scope to a multi-party democracy, using Germany as a case study. We simulate dyadic debates between LLM agents assigned realistic political personas derived from the German Longitudinal Election Study (GLES), with initial positions benchmarked against official party stances from the Wahl-O-Mat. Using the SAUCE framework (Neuberger et al., 2024), we generate and analyse 2,800 debates to investigate (1) whether LLM agents with strong partisan affiliation align with their party’s official positions, and (2) whether discussions cause systematic opinion shifts and convergence. To ensure robustness, we apply three different prompt versions and compare their effects on agent opinions. Results show that prompt design significantly affects responses, underscoring the need for careful experimental control. Despite this sensitivity, our findings indicate that agents often begin aligned with party positions but exhibit opinion shifts over time, with evidence of convergence towards more uniform stances. These findings highlight both the potential and the limitations of using LLM agents as proxies for political opinion dynamics in multi-party contexts, offering methodological contributions for computational social science and raising questions about hidden biases in LLM-based simulations.
