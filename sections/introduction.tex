@@ -23,59 +23,120 @@ However, this opportunity comes with risks. Despite their fluency, LLMs inherit 
 Understanding such effects is crucial not only for assessing the fairness of LLM-driven systems but also for improving their interpretability as tools in social simulation. If an LLM debate environment systematically treats gendered personas differently, it may distort results, reinforcing stereotypes rather than modelling neutral discourse. Investigating these dynamics therefore matters both for advancing methodological rigour in computational social systems and for ensuring that the use of LLMs in social contexts remains transparent, responsible, and scientifically grounded.
 
 
-\section{Problem statement and research gap}
+\section{Problem Statement and Research Gap}
 
-While existing research has explored bias in LLM outputs across various contexts such as occupational stereotypes, sentiment, and dialogue tone, far less is known about how these biases manifest in interactive and multi-agent settings. Most prior studies focus on single-turn text generation or static prompt evaluations, overlooking how bias may influence dynamic exchanges like debates or discussions. Yet, when multiple LLMs interact, their outputs do not simply reflect individual biases but can compound or evolve through dialogue dynamics, affecting argument structure, dominance, and persuasion outcomes.
+Recent advances in large language models (LLMs) have made it possible to simulate complex social phenomena such as political debates through multi-agent interactions. These simulations promise a controlled and reproducible way of studying opinion formation and persuasion processes—key interests in computational social science. However, while LLMs can generate coherent dialogue, the extent to which their simulated behaviours reliably reflect the intended social constructs rather than artefacts of the underlying models remains unclear.
 
-A recent study by \citet{taubenfeld_systematic_2024} highlights this challenge, investigating how the opinions of LLM agents evolve over a debate. Their findings suggest that agents tend to drift toward the underlying model's biases, even when personas are assigned distinct viewpoints. This "persona instability" presents a significant problem for the validity of using LLMs in social simulations. If agents cannot reliably maintain their assigned profiles throughout an interaction, the simulation risks modelling the artefacts of the base model rather than the intended social phenomenon.
+A recent contribution in this area is the work by \citet{taubenfeld_systematic_2024}, who investigated systematic biases in simulated debates between LLM-based agents. Their framework paired agents with opposing ideological profiles (Republican, Democrat, and Default) and analysed how their expressed opinions evolved over multiple dialogue turns when debating controversial topics . The study found that, despite being instructed to represent distinct viewpoints, agents tended to converge in their opinions. When instructed to represent the same viewpoint, however, their opinions gradually shifted. The authors hypothesised that this behaviour reflects the underlying bias of the base model and noted that this goes against the common theory of echo chambers, where agents with like-minded views would tend to intensify their beliefs when interacting with each other.
 
-While this finding is significant, it opens up several critical and unaddressed questions regarding the methodology and interpretation of such simulations. This thesis identifies three primary research gaps:
+To test this hypothesis, the authors fine-tuned separate versions of the model to adopt either a Democratic or Republican perspective. This process involved (1) generating 20 Democratic and 20 Republican personas, (2) prompting these personas to answer 100 politically themed questions designed to elicit their beliefs and reasoning, and (3) fine-tuning the base model on the resulting 2,000 responses using a parameter-efficient QLoRA next-word prediction task.
 
-First, the methodological question of prompt sensitivity remains largely unexplored in multi-agent contexts. Previous studies often use a single, fixed prompt structure without testing how minor linguistic variations—such as changes in politeness, phrasing, or punctuation—might alter agent behaviour. If the drift observed by \cite{taubenfeld_systematic_2024} is contingent on a specific prompt design, then the robustness of such findings is unclear. This raises a crucial question for the field: are the observed dynamics a genuine feature of agent interaction, or are they an artefact of the specific instructions given to the models?
+With these Democratic- and Republican-tuned models, the authors repeated the debate simulations. The results showed not only continued convergence between agents but, crucially, convergence towards the ideological direction of the fine-tuned model. This outcome strengthened the hypothesis that LLM debate behaviour is shaped more by the base model’s internal bias than by the explicit persona instructions given to the agents.
 
-Secondly, the dynamics of opinion change during interaction require deeper investigation. The authors plotted the opinions over time and based on this plot concluded that the opinions converge over time to the LLMs bias. Only focusing on the qualitative explanation a shift on a more statistical sound method of measuring consensus over time would be interesting to observe. 
+While the study established an important foundation, several broader questions remain open. First, the degree to which LLM behaviour depends on prompt design is largely unexplored. Subtle differences in phrasing, politeness, or structural cues could influence how agents interpret their roles and respond to debate topics, yet most studies—including that of \citet{taubenfeld_systematic_2024}—use a single prompt structure without assessing its robustness.
 
-Furthermore, the research has been conducted in a two party system where the opinions to the questions brought up in the debates always had complete opposite opinions. We also want to look at cases where the opinions are not so divided such as what can be found in a multi-party system. 
+Second, the dynamics of opinion change observed in debate settings require a more quantitative treatment. The original analysis relied primarily on qualitative interpretation of plotted opinion trajectories. It remains unclear whether the apparent convergence toward a shared stance represents meaningful interaction effects or merely reflects model-level bias.
 
-Additionally, the research was conducted on now outdated LLMs (gpt-3.5-turbo-instruct \citet{brown2020language}, Mistral 7B \citet{jiang2023mistral7b}, Solar 10.7B \citet{kim2024Solar}). 
+Finally, the debate simulations examined by \citet{taubenfeld_systematic_2024} were restricted to a bipartisan context (Republican versus Democrat). Real-world political discourse, however, is often more complex, involving multiple parties and overlapping ideological positions. Extending such analyses to a multi-party system would provide a more comprehensive test of LLMs’ ability to sustain diverse and stable viewpoints.
 
-
-
-
-
-
-\begin{comment}
-
-Large Language Models (LLMs) are increasingly used to simulate human behaviour in political contexts, often in combination with Multi-Agent Systems (MAS) \citep{zhao2023competeai, kaiya2023lyfe}. One main motivation behind this is to better understand how LLMs behave when embedded in interactive settings, and to evaluate to what extent they can be used as a proxy for human participants in social science research.
-
-These results point to a broader issue: LLMs can exhibit deep and hidden biases that are not always obvious. As \cite{gupta2023bias} showed, LLMs might deny that socio-demographic factors (like religion or disability) influence reasoning, yet their behaviour changes significantly when such attributes are included in the input persona. This suggests that model outputs can vary in subtle but important ways, depending on the assumed identity of the user or agent. These hidden biases can lead to worse performance, biased answers, or stereotypical suggestions when simulating diverse social groups.
-
-Understanding these dynamics is important both for researchers and for developers. For users, it affects trust, fairness, and the usefulness of LLM outputs. For developers, such insights can help improve how LLMs respond across different socio-demographic profiles and lead to better alignment.
-
-
-Following this,\citeauthor{taubenfeld_systematic_2024} observed a political inherent bias in the LLM agents. This was observed by simulated dyadic and triadic discussions between LLM agents, assigning them political identities such as Democrat, Republican, or neutral. When the agents debated controversial political topics (e.g. gun violence, racism, climate change, and illegal immigration), the researchers observed that the agents’ opinions gradually shifted towards the inherent bias of the LLM itself. This effect even appeared when both agents started from similar political positions. The presence of such model bias was confirmed by fine-tuning the LLM in different directions, making it more like a Republican or Democrat, and observing corresponding shifts in opinion. Agents’ stances were recorded on a 0–10 scale, and the simulation was built using the SAUCE framework \cite{neuberger2024sauce}.
-
-\end{comment}
-
-
+In addition, the original study relied on now outdated models (\texttt{gpt-3.5-turbo-instruct}, \texttt{Mistral 7B}, and \texttt{Solar 10.7B}), raising questions about whether the observed effects persist in more recent architectures. Addressing these methodological and conceptual gaps is crucial for understanding when and how LLM-based debate simulations can serve as valid tools for social-scientific inquiry.
 
 
 \section{Research Questions}
-
-This thesis aims to provide several new contributions regarding the study of Large Language Models within simulated social interactions. It builds upon the previous research, for example by \cite{taubenfeld_systematic_2024}, which studied LLM biases in political debates within the two-party system of the USA. However, the primary novelty of this work is the extension of this research question to a multi-party democracy context, specifically Germany, which represents a more common political system globally. A specific contribution is the use of detailed agent profiles based on empirical data from the German Longitudinal Election Study (GLES). This is intended to create more realistic agent personas compared to self-generating personas. Furthermore, a key aspect of the methodology is the explicit measurement of the agents' initial agreement with official party positions, using Wahl-O-Mat data, before the simulation begins. This provides an important baseline for analysing any opinion changes. Therefore, the core contribution is this combination: examining a multi-party system, using these realistic GLES profiles, and including the analysis of initial alignment together with the study of opinion shifts during interaction.
-
-To do this we firstly need to create an agent baseline by asking to what extend the do agents initially align with their party's official stance. Following a dyadic debate we would then ask weather a political opinion shift can be observed as well. And finally we will ask ourself what are the variables which predict change of opinions of LLM agents, putting an focus on party association and agents gender. 
-
-This leads us to the following research questions:
+\label{sec:research_questions}
+While prior work often relies on a single debate prompt, subtle linguistic variations can alter how an LLM interprets its role and responds to contentious topics. This question examines whether different prompt phrasings—while keeping the underlying task identical—lead to measurable differences in agents’ expressed opinions. Assessing prompt sensitivity is essential for determining the robustness and reproducibility of LLM-based debate simulations. This leads to the first research question:
 \researchquestion{RQ1: Is there a significant impact of the prompt chosen on the opinions?}
-\researchquestion{RQ2: Do agents with strong party affiliation align with their party’s official stance?}
-\researchquestion{RQ3: Does discussion cause agents' opinions to significantly shift from their starting points and converge towards more uniform stances?}
 
 
 
-\section{Approach summary}
+Unlike previous studies that constructed political personas through ad-hoc prompting, this study derives personas empirically from the German Longitudinal Election Study (GLES) dataset. These data-driven personas allow for a more grounded representation of real-world political attitudes. This second reseach-question therefore tests whether LLM agents initialised with empirically informed political profiles maintain ideological consistency with their affiliated party when engaged in debate and is formulated as follows.
+\researchquestion{RQ2: Do agents with strong party affiliation align with their party’s official stance?}  
 
-\section{Main contributions}
+
+Earlier findings by \citet{taubenfeld_systematic_2024} indicated that LLM agents tend to converge in opinion, even when representing opposing sides. This question revisits that phenomenon using newer models and an extended multi-party debate framework. The aim is to quantify whether opinion change over time reflects genuine conversational influence between agents or merely the manifestation of shared underlying model bias.
+\researchquestion{RQ3: Does discussion cause agents' opinions to significantly shift from their starting points and converge towards more uniform stances?}  
+
+
+
+
+\section{Approach Summary}
+
+This study simulates dyadic political debates between Large Language Model (LLM) agents endowed with socio-demographic and political profiles derived from the German Longitudinal Election Study (GLES). The methodological pipeline consists of six main stages (Figure~\ref{fig:approach_overview}):
+
+\begin{figure}[]
+\centering
+\begin{tikzpicture}[
+    node distance = 14mm and 10mm,
+    every node/.style = {align=center, font=\small, rounded corners, minimum height=1.1cm, text width=3.2cm, draw=black!70, fill=gray!5},
+    arrow/.style = {->, thick, >=latex, black!70}
+]
+
+% Top row
+\node (step1) {1. Agent Profiling \\ and Sampling};
+\node (step2) [below=of step1] {2. Topic \\ Selection};
+\node (step3) [right=of step2] {3. Debate \\ Pairing Design};
+
+% Bottom row
+\node (step5) [right=of step3] {5. Debate Simulation \\ and Data Collection};
+\node (step4) [above=of step5] {4. Prompt Construction \\ and Sensitivity};
+\node (step6) [below=of step5] {6. Validation \\ and Statistical Analysis};
+
+% Arrows (top row)
+\draw[arrow] (step1) -- (step3);
+\draw[arrow] (step2) -- (step3);
+
+% Arrows (bottom row)
+\draw[arrow] (step4) -- (step5);
+\draw[arrow] (step5) -- (step6);
+
+% Vertical connectors
+\draw[arrow] (step3) -- (step4);
+
+\end{tikzpicture}
+\caption{Overview of the six-stage methodological pipeline. }
+\label{fig:approach_overview}
+\end{figure}
+
+
+\begin{enumerate}
+    \item \textbf{Agent Profiling and Sampling:}  
+    Personas are generated using the principle of \emph{Quantitative Persona Creation} \citep{Salminen2020quantative}. Each persona represents an archetypical supporter of one of six German political parties (CDU/CSU, SPD, Bündnis 90/Die Grünen, FDP, AfD, Die Linke), based on socio-demographic and attitudinal variables from the GLES 2021 dataset. A default, non-biographical agent serves as a baseline reference.
+
+    \item \textbf{Topic Selection:}  
+    Debate topics are drawn from five politically salient statements taken from the 2021 \emph{Wahl-O-Mat}, Germany’s official voter-assistance tool. These topics were selected to cover a range of policy domains and to elicit divergent party opinions.
+
+    \item \textbf{Debate Pairing Design:}  
+    Agents are paired across all within- and between-party combinations, including debates with the default agent. Each pair discusses all five topics, leading to a comprehensive coverage of ideological interactions.
+
+    \item \textbf{Prompt Construction and Sensitivity Conditions:}  
+    To examine the robustness of model responses, three prompt formulations—varying in conciseness, descriptiveness, and politeness—are applied to two use cases: debate continuation and questionnaire evaluation. This results in six total prompt skeletons (see Table~\ref{tab:prompt_skeletons}).
+
+    \item \textbf{Debate Simulation and Data Collection:}  
+    Debates proceed for 20 alternating turns using a modified version of the SAUCE framework \citep{neuberger2024sauce}. Every fourth turn, both agents are queried with a Likert-style evaluation of the current topic to capture temporal opinion shifts. Across all conditions, this yields 21,000 individual measurements.
+
+    \item \textbf{Validation and Statistical Analysis:}  
+    To assess the validity of the generated Likert responses, a subset of outputs is evaluated by human annotators. The main quantitative analyses employ mixed-effects models to test for effects of prompt version, debate partner, and time on agents’ expressed opinions, accounting for repeated measures within debate sessions.
+\end{enumerate}
+
+This multi-stage design ensures a systematic investigation of (i) ideological alignment, (ii) opinion shift dynamics, and (iii) prompt sensitivity across different LLM architectures and interaction contexts.
+
+
+
+\section{Main Contributions}
+
+This thesis contributes to the emerging field of LLM-based social simulations by extending existing debate frameworks both conceptually and methodologically. Building on \citet{taubenfeld_systematic_2024}, it introduces several innovations that enhance the validity, robustness, and generalizability of such simulations.
+
+First, the study systematically investigates prompt robustness. While prior work typically relied on a single debate prompt, this thesis varies the linguistic framing of prompts while keeping all other parameters constant. This enables an empirical assessment of how sensitive debate outcomes are to subtle differences in wording, and whether observed opinion differences stem from genuine model bias or the phrasing of the task itself.
+
+Second, it develops an empirical method for persona construction. Instead of generating political profiles through ad-hoc instructions, the personas used in this study are derived from the German Longitudinal Election Study (GLES) dataset. This approach grounds the agents’ ideological orientations in real-world survey data, creating a reproducible and data-driven foundation for representing political attitudes.
+
+Third, the thesis extends the traditional bipartisan debate setup to a multi-party framework that mirrors the diversity of the German political landscape. This expansion allows for a more realistic and fine-grained analysis of ideological alignment, cross-party convergence, and the stability of multiple competing viewpoints within the same discussion.
+
+Finally, the study introduces a quantitative approach to opinion dynamics using mixed-effects models. This enables a statistical assessment of whether debates lead to significant opinion shifts and whether convergence arises from conversational influence or shared underlying model bias. In doing so, the analysis moves beyond qualitative interpretation towards a more rigorous, data-driven understanding of interaction effects.
+
+Together, these contributions advance the methodological toolkit for studying social phenomena through language model interactions and help clarify under what conditions LLM debates can serve as valid approximations of human political discourse.
+
 
 
 \section{Thesis outline}
+
