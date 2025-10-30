@@ -22,13 +22,11 @@ We simulate dyadic political debates between Large Language Model (LLM) agents e
 \section{Agent Profiling and Sampling}
 \label{sec:agent_profiling_and_sampling}
 
-wThe personas were generated based on quantitative measurements, which is referred to as Quantitative Persona Creation \cite{Salminen2020quantative}. Taking the approach from \cite{von2024vox} we took the German Longitudinal Election Study (GLES) as the base to create profiles. The section we chose is the GLES Cross-Section 2009-2021 cumulative dataset \citep{ZA6835}. This dataset contains socio-demographic and political attitude data from German federal election years 2009, 2013, 2017, and 2021. This dataset  is then filtered by only taking respondents data which contain data for the variables of interest (see below). Furthermore, we only take the subset of the data which have the encoded field start set to \texttt{27.09.2021}, meaning that this survey was taken after the 2021 federal election and thus respondents can state which party they have voted for. This leads to a total of 3,431 respondents. The GLES records are filtered to retain agents with strong party identification (German: \emph{sehr stark}) for six Bundestag parties: CDU/CSU, SPD, Bündnis 90/Die Grünen, FDP, AfD, Die Linke which were the parties having seats in the 20th Bundestag between 2021 and 2025. The Party SSW is not included due to it only contesting in Schleswig-Holstein and only having a sigle seat in the Bundestag. 
+The personas were generated based on quantitative measurements, which is referred to as Quantitative Persona Creation \cite{Salminen2020quantative}. Taking the approach from \cite{von2024vox}, we use data from the cumulative German Longitudinal Election Study (GLES) Cross-Section 2009–2017 \citep{ZA6835}. This dataset contains socio-demographic and political attitude data from German federal election years 2009, 2013, 2017, and 2021. This dataset  is then filtered by only taking respondents data which contain data for the variables of interest (see below). Furthermore, we only take the subset of the data which have the encoded field start set to \texttt{27.09.2021}, meaning that this survey was taken after the 2021 federal election and thus respondents can state which party they have voted for. This leads to a total of 3,431 respondents. The GLES records are filtered to retain agents with strong party identification (German: \emph{sehr stark}) for six Bundestag parties: CDU/CSU, SPD, Bündnis 90/Die Grünen, FDP, AfD, Die Linke which were the parties having seats in the 20th Bundestag between 2021 and 2025. The Party SSW is not included due to it only contesting in Schleswig-Holstein and only having a sigle seat in the Bundestag. 
 
 The selected variables from which the personas were generated were taken from \cite{von2024vox} and have been shown to be important predictors of voting behaviour—demographics, party affiliations, and views on politically salient issues, such as immigration. The variables include age, gender, education, employment, household income, whether they live in west or east Germany, religiousness, self-evaluation of weather they see themselves as left or right leaning, party alignment, opinion on inequality, option on immigration and their 2021 federal election vote. The variables were then made into a story by using a template which can be seen in the Appendix \todo{add template into appendix}.
 
-Furthermore we create a default agent which doesn't have a biography. This serves as a baseline 
-
-
+Furthermore we create a default agent which doesn't have a biography. This serves as a baseline  \todo{as a baseline for what????}
 
 \section{Wahl-O-Mat Statements}
 
@@ -95,7 +93,7 @@ For our analysis, we simulated debates based on five questions from the Wahl-O-M
 \section{Prompt Construction and Sensitivity 
 Conditions}
 
-For this experiment two different types of prompts are needed. The first one is to generate an answer in the debate for the other agent to later answer, the second one is needed to generate the evaluation of the questionnaire topic from as found in table \ref{tab:questionnaire}. Nevertheless the two types of prompts are similarly structured. Furthermore we are interested in how strong the impact of the chosen prompt is on the results. Since we are unable to apply the prompt sensitivity frameworks POSIX \citep{chatterjee2024posix} and ProSA \citep{zhuo2024prosa} we chose to create three different prompt versions, leading to a total of 6 prompt skeletons (3 prompt versions $\times$ 2 prompt use cases). The differences between the three prompt versions can be found in length, punctuation \cite{sclar2023quantifying} and politeness \cite{yin2024should}. The prompt skeletons can be seen in table \ref{tab:prompt_skeletons}. There are multiple placeholders in the skeleton, the \texttt{\{experiment\_scenario\}} consists out of the question they agents are suppose to discuss about and is structured as follows: \textit{You are discussing the statement: Germany should increase its defence spending.} where the statement is one of the five chosen topics from the Wahl-O-Mat. The \texttt{\{background\_story\}} is the text generated in section \ref{sec:agent_profiling_and_sampling}. In the case of that we are using the `default` agent the part with the background story will be removed from the prompt. In the questionnaire evaluation case we also have a \texttt{\{question\}}, which is structured as following: \textit{On a scale of 1 to 7, how much do you agree with the statement: Germany should increase its defence spending? Answer with only one number.} Finally, the \texttt{\{prior\_turns\}} contains the debate up until that moment and will be discussed in detail in the section \ref{sec:debate_procedure}.
+For this experiment two different types of prompts are needed. The first one is to generate an answer in the debate for the other agent to later answer, the second one is needed to generate the evaluation of the questionnaire topic from as found in table \ref{tab:questionnaire}. Nevertheless the two types of prompts are similarly structured. Furthermore we are interested in how strong the impact of the chosen prompt is on the results. Since we are unable to apply the prompt sensitivity frameworks POSIX \citep{chatterjee2024posix} and ProSA \citep{zhuo2024prosa} we chose to create three different prompt versions, leading to a total of 6 prompt skeletons (3 prompt versions $\times$ 2 prompt use cases). The differences between the three prompt versions can be found in length, punctuation \cite{sclar2023quantifying} and politeness \cite{yin2024should}. The prompt skeletons can be seen in table \ref{tab:prompt_skeletons}. There are multiple placeholders in the skeleton, the \texttt{\{experiment\_scenario\}} consists out of the question they agents are suppose to discuss about and is structured as follows: \textit{You are discussing the statement: Germany should increase its defence spending.} where the statement is one of the five chosen topics from the Wahl-O-Mat. The \texttt{\{background\_story\}} is the text generated in section \ref{sec:agent_profiling_and_sampling}. In the case of that we are using the `default` agent the part with the background story will be removed from the prompt. In the questionnaire evaluation case we also have a \texttt{\{question\}}, which is structured as following: \textit{On a scale of 1 to 7, how much do you agree with the statement: Germany should increase its defence spending? Answer with only one number.} Finally, the \texttt{\{prior\_turns\}} contains the debate up until that moment and will be discussed in detail in the section \ref{sec:debate_procedure}. The \texttt{max\_token} parameter of the output is set to 100 tokens\todo{ref to appendix and max 100 token ou}
 
 
 
@@ -188,13 +186,15 @@ The Python framework to have the debate is a modified version of \cite{neuberger
 Using the simulation framework by \cite{neuberger2024sauce} we let each dyadic debate proceeds for 20 iterations. The initial speaker is selected randomly, and following this alternating responses. The responses are generated using the use case 1 from table \ref{tab:prompt_skeletons}. The output from the LLM would then be added to the next iteration under the \texttt{\{prior\_turns\}}, meaning that we have a growing context. At every 4th turn (t = 0,4,8,12,16,20; where t=0 is the baseline opinion) both agents are queried with the questionnaire evaluation prompt (use case 2 in table \ref{tab:prompt_skeletons}), producing a Likert response (\(1=\) strong disagreement, \(4=\) neutral, \(7=\) strong agreement). These numeric responses are not fed back into subsequent prompts, but rather will be saved for further investigation. The collected data contains then the party the agent is aligning with, the party the debate partner is aligning with, the debate turn, the question, the repetition, of that experiment, the prompt version and the answer the agent gave. The total amount of 21,000 measurements (21 unique party combinations $\times$ 6 debate turns $\times$ 5 questions $\times$ 5 repetitions $\times$ 3 prompt versions).
 
 
-\section{Questionnaire-Evaluation Validation}
-\label{sec:questionnaire_validation}
-
+\section{Validation of Numeric Agent Responses}
 To determine if the numeric responses from the agents possess face validity, we designed a validation procedure involving human annotators. The core objective is to compare the Likert-scale answers generated by the LLMs with the answers human annotators would expect the LLMs to provide in the same context.
 
 The validation process is as follows:
-First, a subset of debates is sampled from the main dataset. From each of these debates, we select a specific turn where a questionnaire prompt was administered to an agent (e.g., at turn 4, 8, 12, etc.). Next, human annotators are presented with the exact and complete prompt that the LLM agent received at that selected turn. This includes the full prior conversation history (\texttt{\{prior\_turns\}}) and the specific question the agent was asked to evaluate. The crucial task for the annotators is not to state their own personal opinion. Instead, they must carefully read the debate history and, considering the agent's assigned background story, predict the Likert-scale response ($1-7$) that the agent should have given. Finally, the scores predicted by the human annotators are compared with the actual scores generated by the LLM agents. This comparison allows us to evaluate whether the agents' self-reported opinions are plausible and coherent given the context of the debate.
+First, a subset of debates is sampled from the main dataset. From each of these debates, we select a specific turn where a questionnaire prompt was administered to an agent (e.g., at turn 4, 8, 12, etc.). Next, human annotators are presented with the exact and complete prompt that the LLM agent received at that selected turn. For this we used 3 different human evaluators which each answered 20 questions leading to a total of 60 comparison points. This includes the full prior conversation history (\texttt{\{prior\_turns\}}) and the specific question the agent was asked to evaluate. The crucial task for the annotators is not to state their own personal opinion. Instead, they must carefully read the debate history and, considering the agent's assigned background story, predict the Likert-scale response ($1-7$) that the agent should have given. Finally, the scores predicted by the human annotators are compared with the actual scores generated by the LLM agents. This comparison allows us to evaluate whether the agents' self-reported opinions are plausible and coherent given the context of the debate.
+
+Statistical significance between the paired agent and annotator scores is evaluated using the \textbf{Wilcoxon Signed-Rank Test} across each questionnaire item. This non-parametric approach is suitable for comparing the dependent, ordinal data derived from the Likert scale responses.
+
+
 
 \section{Prompt Sensitivity - RQ1}
 
@@ -338,7 +338,7 @@ The \texttt{gpt-oss-120b} and \texttt{Mistral-Small-3.1-24B} were served locally
 \renewcommand{\cellalign}{l} 
 \begin{tabularx}{\textwidth}{X c c c c}
 \toprule
-\textbf{Model} & \textbf{Size in Billion} & \textbf{Developer} & \textbf{Access Method} & \textbf{Cutoff}\\
+\textbf{Model} & \textbf{Size in Billion} & \textbf{Developer} & \textbf{Access Method} & \textbf{Cut-off}\\
 \midrule
 \makecell{\texttt{gpt-4.1-mini}} 
     & Unknown 
@@ -363,3 +363,14 @@ The \texttt{gpt-oss-120b} and \texttt{Mistral-Small-3.1-24B} were served locally
 \bottomrule
 \end{tabularx}
 \end{table}
+
+
+\section{Software and Hardware}
+Computations were performed using resources provided by RWTH Aachen University under project \texttt{cj010365}. 
+Large Language Models (LLMs) were executed on an NVIDIA H100 Tensor Core GPU\footnote{\url{https://www.nvidia.com/en-us/data-center/h100/}}, 
+while the remaining processing tasks ran on Intel\textsuperscript{\textregistered} Xeon\textsuperscript{\textregistered} Platinum 8468 processors\footnote{\url{https://www.intel.com/content/www/us/en/products/sku/231735/intel-xeon-platinum-8468-processor-105m-cache-2-10-ghz/specifications.html}} 
+under Rocky Linux~9. 
+
+All code was developed and executed in Python~3.12.9 within a virtual environment. The main packages used were 
+\texttt{numpy==2.2.6}, \texttt{pandas==2.3.1}, and \texttt{vllm==0.10.1+gptoss}. 
+A complete list of dependencies is provided in Appendix~\ref{appendix:python_dependencies}.

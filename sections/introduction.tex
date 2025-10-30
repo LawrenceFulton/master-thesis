@@ -27,7 +27,7 @@ Understanding such effects is crucial not only for assessing the fairness of LLM
 
 Recent advances in large language models (LLMs) have made it possible to simulate complex social phenomena such as political debates through multi-agent interactions. These simulations promise a controlled and reproducible way of studying opinion formation and persuasion processes—key interests in computational social science. However, while LLMs can generate coherent dialogue, the extent to which their simulated behaviours reliably reflect the intended social constructs rather than artefacts of the underlying models remains unclear.
 
-A recent contribution in this area is the work by \citet{taubenfeld_systematic_2024}, who investigated systematic biases in simulated debates between LLM-based agents. Their framework paired agents with opposing ideological profiles (Republican, Democrat, and Default) and analysed how their expressed opinions evolved over multiple dialogue turns when debating controversial topics . The study found that, despite being instructed to represent distinct viewpoints, agents tended to converge in their opinions. When instructed to represent the same viewpoint, however, their opinions gradually shifted. The authors hypothesised that this behaviour reflects the underlying bias of the base model and noted that this goes against the common theory of echo chambers, where agents with like-minded views would tend to intensify their beliefs when interacting with each other.
+A recent contribution in this area is the work by \citet{taubenfeld_systematic_2024}, who investigated systematic biases in simulated dyadic and triadic debates between LLM-based agents. Their framework paired agents with opposing ideological profiles (Republican, Democrat, and Default) and analysed how their expressed opinions evolved over multiple dialogue turns when debating controversial topics (\textit{Gun Violence, Racism, Climate Change, and Illegal Immigration}). The study found that, despite being instructed to represent distinct viewpoints, agents tended to converge in their opinions. When instructed to represent the same viewpoint, however, their opinions gradually shifted. The authors hypothesised that this behaviour reflects the underlying bias of the base model and noted that this goes against the common theory of echo chambers, where agents with like-minded views would tend to intensify their beliefs when interacting with each other.
 
 To test this hypothesis, the authors fine-tuned separate versions of the model to adopt either a Democratic or Republican perspective. This process involved (1) generating 20 Democratic and 20 Republican personas, (2) prompting these personas to answer 100 politically themed questions designed to elicit their beliefs and reasoning, and (3) fine-tuning the base model on the resulting 2,000 responses using a parameter-efficient QLoRA next-word prediction task.
 
@@ -63,7 +63,7 @@ Earlier findings by \citet{taubenfeld_systematic_2024} indicated that LLM agents
 
 This study simulates dyadic political debates between Large Language Model (LLM) agents endowed with socio-demographic and political profiles derived from the German Longitudinal Election Study (GLES). The methodological pipeline consists of six main stages (Figure~\ref{fig:approach_overview}):
 
-\begin{figure}[]
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}[
     node distance = 14mm and 10mm,
